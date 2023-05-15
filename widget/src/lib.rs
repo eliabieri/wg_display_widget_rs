@@ -14,7 +14,7 @@ struct WidgetConfig {
     city: String,
 }
 
-const WIDGET_NAME: &str = "Aare Temperature";
+const WIDGET_NAME: &str = "Rust Widget Template";
 
 struct MyWidget;
 
@@ -24,17 +24,21 @@ impl Widget for MyWidget {
     }
 
     fn run(config: WidgetContext) -> WidgetResult {
+        // Widgets can log to the console
         logging::log(logging::Level::Info, WIDGET_NAME, "Widget run started");
 
+        // Widgets can handle the case where no config is provided
         if "{}" == config.config {
             return WidgetResult {
                 data: "No config provided".into(),
             };
         }
 
+        // Widgets can parse their config with ease using serde
         let config: WidgetConfig =
             serde_json::from_str(&config.config).expect("Failed to parse config");
 
+        // Widgets can make network requests
         let response = http::request(
             http::Method::Get,
             format!(
@@ -58,7 +62,7 @@ impl Widget for MyWidget {
 
         let data: Result<Value, Error> = serde_json::from_slice(response.bytes.as_slice());
         let result = match data {
-            Ok(data) => format!("{}: {} C", config.city, data["aare"]),
+            Ok(data) => format!("Aare Temperature in {}: {} C", config.city, data["aare"]),
             Err(_) => "Response from AareGuru could not be parsed".into(),
         };
 

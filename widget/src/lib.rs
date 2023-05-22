@@ -23,12 +23,12 @@ impl Widget for MyWidget {
         WIDGET_NAME.into()
     }
 
-    fn run(config: WidgetContext) -> WidgetResult {
+    fn run(context: WidgetContext) -> WidgetResult {
         // Widgets can log to the console
         logging::log(logging::Level::Info, WIDGET_NAME, "Widget run started");
 
         // Widgets can handle the case where no config is provided
-        if "{}" == config.config {
+        if "{}" == context.config {
             return WidgetResult {
                 data: "No config provided".into(),
             };
@@ -36,7 +36,7 @@ impl Widget for MyWidget {
 
         // Widgets can parse their config with ease using serde
         let config: WidgetConfig =
-            serde_json::from_str(&config.config).expect("Failed to parse config");
+            serde_json::from_str(&context.config).expect("Failed to parse config");
 
         // Widgets can make network requests
         let response = http::request(
@@ -76,6 +76,11 @@ impl Widget for MyWidget {
 
     fn get_version() -> wit_bindgen::rt::string::String {
         "1.0.0".into()
+    }
+
+    fn get_run_update_cycle_seconds() -> u32 {
+        // This widget shall be updated every second
+        1
     }
 }
 

@@ -20,7 +20,7 @@ const WIDGET_NAME: &str = "Rust Widget Template";
 
 struct MyWidget;
 
-impl Widget for MyWidget {
+impl Guest for MyWidget {
     fn get_name() -> wit_bindgen::rt::string::String {
         WIDGET_NAME.into()
     }
@@ -86,4 +86,4 @@ impl Widget for MyWidget {
     }
 }
 
-export_widget!(MyWidget);
+export!(MyWidget);
